@@ -71,29 +71,9 @@ def detection_Edge(img):
     canny_list = np.array([[_x,_y] for _x,_y in zip(x,y)]) # 邊界點座標
     return canny_list
 
-def trans_To_Oval(edge):
-    #执行椭圆变换
-    #result = transform.hough_ellipse(edge, threshold=50, accuracy=5, min_size=1)
-    result =transform.hough_ellipse(edge, accuracy=20, threshold=250,min_size=100, max_size=120)
-    #result =transform.hough_ellipse(edge)
-    result.sort(order='accumulator') #根据累加器排序
-    print(result)
-    
-    #估计椭圆参数
-    best = list(result[-1])  #排完序后取最后一个
-    yc, xc, a, b = [int(round(x)) for x in best[1:5]]
-    orientation = best[5]
 
-    #在原图上画出椭圆
-    print("short:", str(a), "  long:", str(b))
-    cy, cx =draw.ellipse_perimeter(yc, xc, a, b, orientation)
-    crop_img[cy, cx] = (0, 0, 255) #在原图中用紅色表示检测出的椭圆
-    cv2.imshow("final",crop_img)
-    cv2.waitKey(0)
-    
 def fit_ellipse(edge_list, ori):
     _ellipse = cv2.fitEllipse(edge_list) #calculate ellipse
-    print(_ellipse)
     edge_clone=ori.copy()
     cv2.ellipse(edge_clone, _ellipse, (255,0,0),2) #paint ellipse
     plt.imshow(edge_clone)
@@ -108,16 +88,32 @@ def contrast_Img(img, contrast, bright):
 def calcu_area(img):
     height, width = img.shape
     area = 0
-    print(height, width)
     for i in range(height):
         for j in range(width):
-            if img[i, j] == 0:
+            if img[i, j] != 0:
                 area += 1
     return area
 
 def calcu_ellipse_area(short, long):
     ellipse_area = math.pi * short * long
     return ellipse_area
+
+def calcu_ellipse_eccentricity(short, long):
+    focal = math.sqrt(long * long - short *short)
+    e = focal / long
+    return e
+
+def calcu_hull(edge):
+    hull = cv2.convexHull(edge)
+    cv2.polylines(crop_img, [hull], True, ( 0, 255, 0), 2)
+    hull_area = cv2.contourArea(hull)
+    hull_perimeter = cv2.arcLength(hull, True)
+    
+    M = cv2.moments(hull)
+    cX = int(M["m10"] / M["m00"])
+    cY = int(M["m01"] / M["m00"])
+    cv2.circle(crop_img, (cX, cY), 5, (227, 0, 0), -1)
+    return hull_area, hull_perimeter, cX, cY
 
 if __name__ == "__main__":
     '''
@@ -140,6 +136,7 @@ if __name__ == "__main__":
     x_max = 901
     y_max = 655
     
+    
     x = 502
     y = 868
     x_max = 726
@@ -161,9 +158,16 @@ if __name__ == "__main__":
     print("area:", str(area))
     
     edge = detection_Edge(grab) ##return edge point list
-    #trans_To_Oval(edge)
-    longAxis, shortAxis = fit_ellipse(edge, crop_img)
+    
+    hullArea, perimeter, gravity_cx, gravity_cy = calcu_hull(edge)
+    print("hull area:", str(hullArea))
+    print("perimeter:", str(perimeter))
+    
+    shortAxis, longAxis = fit_ellipse(edge, crop_img)
     ellipseArea = calcu_ellipse_area(shortAxis, longAxis)
     print("ellipse area:", str(ellipseArea))
+    eccentricity = calcu_ellipse_eccentricity(shortAxis, longAxis)
+    print("eccentricity:", str(eccentricity))  
+    
     
     cv2.waitKey(0)

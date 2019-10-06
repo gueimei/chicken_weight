@@ -8,8 +8,8 @@ Created on Sat Jul 20 00:42:44 2019
 import os
 
 if __name__ == '__main__':
-    source_folder='D:\\lab\\chicken_video\\dataset\\weight_xml\\'
-    train_dest='D:\\lab\\chicken_video\\dataset\\weight_train_name.txt'
+    source_folder='D:\\lab\\chicken_project\\dataset\\weight_xml'
+    train_dest='D:\\lab\\chicken_project\\dataset\\weight_train_name.txt'
     #val_dest='D:\\lab\\chicken_video\\dataset\\val_name.txt'
     file_list=os.listdir(source_folder)
     train_file=open(train_dest,'a')

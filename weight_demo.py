@@ -11,7 +11,7 @@ import math
 def get_numeralData(inp, img):
     numeral_list = []
     for i in range(inp.shape[0]):
-       data  = collect_data(inp[i,1], inp[i,2], inp[i,3], inp[i,4], img)
+       data  = collect_data(inp[i,0], inp[i,1], inp[i,2], inp[i,3], img)
        
        if data == 0:
             numeral_list.pop()

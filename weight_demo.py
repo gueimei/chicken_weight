@@ -18,4 +18,3 @@ def get_numeralData(inp, img):
        else:
             data = list(map(lambda x: math.log(x), data))
        numeral_list.append(data)
-    

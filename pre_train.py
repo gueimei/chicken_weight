@@ -62,6 +62,7 @@ def fit_ellipse(edge_list, ori, x):
     edge_clone=ori.copy()
     #cv2.ellipse(edge_clone, _ellipse, (0, 0, 255),2) #paint ellipse
     cv2.imwrite("D:\\lab\\chicken_project\\dataset\\weight_test\\%d.jpg"%(x), edge_clone)
+    #cv2.imwrite("/home/pytorch-yolo-v3/imgs/%d.jpg"%(x), edge_clone)
     #plt.imshow(edge_clone)
     return _ellipse[1][0]/2, _ellipse[1][1]/2
     
@@ -136,7 +137,7 @@ def load_Data(source, ac_data, train_data, img): ##load necessary data from a xm
         box = (int(xmlbox.find('xmin').text), int(xmlbox.find('ymin').text), int(xmlbox.find('xmax').text), int(xmlbox.find('ymax').text))
         #start = time.time()
         input_data = collect_data(box[0], box[1], box[2], box[3], img)
-        if input_data == 0:
+        if input_data[6] == 0:
             ac_data.pop()
             print("pop")
         else:
@@ -161,7 +162,7 @@ def collect_data(x, y, x_max, y_max, img):
     area = calcu_area(gray)
     if area < 30:
         print("small", str(x))
-        return 0
+        return [0, 0, 0, 0, 0, 0, 0, 0]
     
     edge = detection_Edge(grab) ##return edge point list
     

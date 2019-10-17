@@ -21,7 +21,7 @@ def get_numeralData(inp, img):
             data = list(map(lambda x: math.log(x), data))
        numeral_list.append(data)
      
-    return predict_weight(numeral_list)
+    return numeral_list
        
        
 class Net(nn.Module):
@@ -52,5 +52,6 @@ def predict_weight(prediction_data):
         prediction_data = prediction_data.cuda()
     with torch.no_grad(): 
         prediction = model_net(prediction_data)
+        
     return prediction
     

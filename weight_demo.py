@@ -21,7 +21,7 @@ def get_numeralData(inp, img):
             data = list(map(lambda x: math.log(x), data))
        numeral_list.append(data)
      
-    predict_weight(numeral_list)
+    return predict_weight(numeral_list)
        
        
 class Net(nn.Module):

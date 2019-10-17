@@ -39,7 +39,7 @@ class Net(nn.Module):
         return out
 
 def predict_weight(prediction_data):
-    weight_path = "/home/chicken_weight/chicken_weight_first.pth"
+    weight_path = "/workspace/weight_dataset/chicken_weight_first.pth"
     model_net = Net()
     model_net.load_state_dict(torch.load(weight_path)) #load checkpoint
     if(torch.cuda.is_available()):

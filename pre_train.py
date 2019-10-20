@@ -61,8 +61,8 @@ def fit_ellipse(edge_list, ori, x):
     _ellipse = cv2.fitEllipse(edge_list) #calculate ellipse
     edge_clone=ori.copy()
     #cv2.ellipse(edge_clone, _ellipse, (0, 0, 255),2) #paint ellipse
-    cv2.imwrite("D:\\lab\\chicken_project\\dataset\\weight_test\\%d.jpg"%(x), edge_clone)
-    #cv2.imwrite("/home/pytorch-yolo-v3/imgs/%d.jpg"%(x), edge_clone)
+    #cv2.imwrite("D:\\lab\\chicken_project\\dataset\\weight_test\\%d.jpg"%(x), edge_clone)
+    cv2.imwrite("/home/pytorch-yolo-v3/imgs/%d.jpg"%(x), edge_clone)
     #plt.imshow(edge_clone)
     return _ellipse[1][0]/2, _ellipse[1][1]/2
     
@@ -92,14 +92,14 @@ def calcu_ellipse_eccentricity(short, long):
 
 def calcu_hull(edge, ori):
     hull = cv2.convexHull(edge)
-    cv2.polylines(ori, [hull], True, ( 0, 255, 0), 2)
+    #cv2.polylines(ori, [hull], True, ( 0, 255, 0), 2)
     hull_area = cv2.contourArea(hull)
     hull_perimeter = cv2.arcLength(hull, True)
     
     M = cv2.moments(hull)
     cX = int(M["m10"] / M["m00"])
     cY = int(M["m01"] / M["m00"])
-    cv2.circle(ori, (cX, cY), 5, ( 0, 0, 227), -1)
+    #cv2.circle(ori, (cX, cY), 5, ( 0, 0, 227), -1)
     return hull_area, hull_perimeter, cX, cY
 
 
@@ -142,7 +142,7 @@ def load_Data(source, ac_data, train_data, img): ##load necessary data from a xm
             print("pop")
         else:
             input_data = list(map(lambda x: math.log(x), input_data))
-            train_data.append(input_data) ##load train_data  
+            train_data.append(input_data) ##load train_data
         #cost = time.time()-start
             
             

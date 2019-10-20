@@ -52,9 +52,7 @@ def predict_weight(prediction_data):
     if(torch.cuda.is_available()):
         prediction_data = prediction_data.cuda()
     with torch.no_grad(): 
-        for i in range(prediction_data.shape[0]):
-            result = model_net(prediction_data)
-            prediction.append(result)
+        prediction = model_net(prediction_data)
         
     return prediction
     

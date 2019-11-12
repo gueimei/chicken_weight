@@ -6,6 +6,7 @@ from skimage import draw,color,transform,feature
 import matplotlib.pyplot as plt
 import math
 import time
+#from sklearn.preprocessing import StandardScaler
 
 def crop(img , x, y, x_max, y_max): #剪裁影像
     return img[y:y_max, x:x_max]
@@ -110,13 +111,13 @@ def load_xml(): #load every xml file
     train_data = []
     #classes = ['chicken']
     for files in sets:
-        if not os.path.exists('D:\lab\chicken_project\dataset\weight_test'):
-            os.makedirs('D:\lab\chicken_project\dataset\weight_test')
-    ids = open('D:\\lab\\chicken_project\\dataset\\%s.txt'%(files)).read().strip().split()
+        if not os.path.exists('/home/chicken_weight/weight_checkpoint'):
+            os.makedirs('/home/chicken_weight/weight_checkpoint')
+    ids = open('/home/chicken_weight/%s.txt'%(files)).read().strip().split()
     
     for ID in ids:
-        img_source = "D:\\lab\\chicken_project\\dataset\\weight_images\\%s.jpg"%(ID)
-        xml_source = "D:\\lab\\chicken_project\\dataset\\weight_xml\\%s.xml"%(ID)
+        img_source = "/workspace/weight_dataset/weight_images/%s.jpg"%(ID)
+        xml_source = "/workspace/weight_dataset/weight_xml/%s.xml"%(ID)
         img = cv2.imread(img_source)
         #print (ID)
         load_Data(xml_source, ac_data, train_data, img)
@@ -135,17 +136,17 @@ def load_Data(source, ac_data, train_data, img): ##load necessary data from a xm
         xmlbox = obj.find('bndbox')
         ##box -> {[0]==x,[1]==y,[2]==x_max,[3]==y_max}
         box = (int(xmlbox.find('xmin').text), int(xmlbox.find('ymin').text), int(xmlbox.find('xmax').text), int(xmlbox.find('ymax').text))
-        #start = time.time()
+        
         input_data = collect_data(box[0], box[1], box[2], box[3], img)
         if input_data[6] == 0:
             ac_data.pop()
             print("pop")
         else:
-            input_data = list(map(lambda x: math.log(x), input_data))
+            #maximum = max(input_data)
+            #input_data = list(map(lambda x: math.log(x)/math.log(maximum), input_data))
             train_data.append(input_data) ##load train_data
-        #cost = time.time()-start
             
-            
+
 def collect_data(x, y, x_max, y_max, img):
     #print(x, y ,x_max, y_max)
     ori = crop(img, x, y, x_max, y_max)
@@ -182,6 +183,6 @@ def collect_data(x, y, x_max, y_max, img):
 if __name__ == "__main__":
     
     data = load_xml()
-    print(data)
+    #print(data)
     
     cv2.waitKey(0)

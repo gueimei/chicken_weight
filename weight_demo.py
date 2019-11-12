@@ -9,6 +9,8 @@ from pre_train import collect_data
 import math
 import torch.nn as nn
 import torch
+from sklearn.externals import joblib
+from sklearn.preprocessing import StandardScaler
 
 def get_numeralData(inp, img):
     numeral_list = []
@@ -38,9 +40,19 @@ class Net(nn.Module):
         out = self.output(pred)
         return out
 
+
 def predict_weight(prediction_data):
-    weight_path = "/workspace/weight_dataset/chicken_weight_first.pth"
+    #weight_path = "/workspace/weight_dataset/chicken_weight_first.pth"
+    weight_path = 'svr_first.pkl'
     prediction = []
+    svr = joblib.load(weight_path)
+
+    ss = StandardScaler()
+    prediction_data = ss.fit_transform(prediction_data)
+
+    prediction = svr.predict(prediction_data)
+
+    '''
     model_net = Net()
     model_net.load_state_dict(torch.load(weight_path)) #load checkpoint
     if(torch.cuda.is_available()):
@@ -53,6 +65,7 @@ def predict_weight(prediction_data):
         prediction_data = prediction_data.cuda()
     with torch.no_grad(): 
         prediction = model_net(prediction_data)
+    '''
         
     return prediction
     

@@ -15,6 +15,16 @@ import numpy as np
 from sklearn.metrics import mean_squared_error#, mean_absolute_error, r2_score
 from sklearn.externals import joblib
 
+def mae_error(right, predict):
+    total = 0
+    length = len(right)
+    means = list(map(lambda x, y: abs(x-y), right, predict))
+    print(means)
+    total = sum(means)
+    result = total / len(right)
+    return result
+
+
 if __name__ == "__main__":
     
     ac_data, train_data = load_xml()
@@ -43,6 +53,7 @@ if __name__ == "__main__":
     print(linear_svr.best_params_)
     
     print("linear函數支持向量機的均方誤差為:", mean_squared_error(y_test, linear_svr_y_predict))
-    print(y_test)
-    print(linear_svr_y_predict)
+    print("mae error:", mae_error(y_test, linear_svr_y_predict))
+    print(len(y_test))
+    #print(linear_svr_y_predict)
     
